@@ -1,4 +1,6 @@
 from flask import Flask, render_template
+from backend import abroquiz
+from markupsafe import escape
 
 app = Flask(__name__)
 
@@ -13,3 +15,8 @@ def landingpage():
 def edit():
     with app.app_context():
         return render_template("quizedit.html")
+
+### API ###
+@app.route('/questions/<quiz_id>/<topic>')
+def get_questions(quiz_id, topic):
+    return abroquiz.get_questions(escape(quiz_id), escape(topic))
