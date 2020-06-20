@@ -20,3 +20,7 @@ def edit():
 @app.route('/questions/<quiz_id>/<topic>')
 def get_questions(quiz_id, topic):
     return abroquiz.get_questions(escape(quiz_id), escape(topic))
+
+@app.teardown_appcontext
+def teardown(exception):
+    abroquiz.teardown(exception)

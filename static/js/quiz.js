@@ -14,7 +14,7 @@ async function GetQuestions(id, topic) {
 
 function AddQuestionToList(item) {
    let listNode = document.createElement("LI")
-   let textNode = document.createTextNode(`${item.q} = ${item.a}`);
+   let textNode = document.createTextNode(`${item.question} = ${item.ans1}`);
    listNode.appendChild(textNode);
    questionlist.appendChild(listNode);
 }
