@@ -3,6 +3,7 @@ import sqlite3
 import os
 from flask import g
 
+# TODO: read this from settings
 DATABASE = 'db/abroquiz_1.db'
 
 def create_connection(db_file):
@@ -37,6 +38,17 @@ def query_db(query, args=(), one=False):
 
     return (rv[0] if records else True) if one else records
 
+def write_db(query, args=()):
+    try:
+        cur = get_db().execute(query, args)
+        cur.close()
+        submit_db()
+        return "true"
+    except Error as e:
+        print(e)
+        return "false"
+
+
 def submit_db():
     get_db().commit()
 
@@ -53,11 +65,13 @@ def dict_factory(cursor, row):
 
 def get_questions(quiz_id, topic):
     return json.dumps(query_db("""
-        SELECT * FROM question;
-    """))
+        SELECT * FROM question WHERE
+        quiz_id = "{}" AND
+        topic = "{}"
+    """).format(quiz_id, topic))
 
 def submit_question(question, answer, topic):
-    query_tmplt = """
+    return write_db("""
         INSERT INTO question (
             "question",
         	"ans1",
@@ -66,7 +80,4 @@ def submit_question(question, answer, topic):
         	"{q}",
         	"{a}",
         	"{t}");
-    """
-    query_db(query_tmplt.format(q=question, a=answer,t=topic))
-    submit_db()
-    return "true"
+    """.format(q=question, a=answer,t=topic))
