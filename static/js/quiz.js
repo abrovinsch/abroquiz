@@ -23,3 +23,21 @@ function ClickButton() {
    questionList.textContent = "loading";
    GetQuestions(0, "båt");
 }
+
+async function SubmitNewQuestion() {
+
+   let form = {
+     question: document.getElementById('question').value,
+     answer: document.getElementById('answer').value,
+     topic: document.getElementById('topic').value
+  };
+
+   const result = await fetch('/abroquiz/submit', {
+     method: 'POST',
+     headers: {
+      'Content-Type': 'application/json'
+    },
+     body: JSON.stringify(form)
+   });
+   console.log(result);
+}

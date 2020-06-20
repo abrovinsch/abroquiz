@@ -1,8 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from backend import abroquiz
 from markupsafe import escape
 
 app = Flask(__name__)
+
+@app.teardown_appcontext
+def teardown(exception):
+    abroquiz.teardown(exception)
+
 
 # Landing page
 @app.route('/')
@@ -21,6 +26,11 @@ def edit():
 def get_questions(quiz_id, topic):
     return abroquiz.get_questions(escape(quiz_id), escape(topic))
 
-@app.teardown_appcontext
-def teardown(exception):
-    abroquiz.teardown(exception)
+@app.route('/abroquiz/submit', methods=['POST'])
+def add_question():
+    content = request.get_json()
+    abroquiz.submit_question(
+        escape(content["question"]),
+        escape(content["answer"]),
+        escape(content["topic"]))
+    return get_questions(0, content["topic"])

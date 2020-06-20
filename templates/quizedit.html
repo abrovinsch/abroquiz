@@ -9,11 +9,28 @@
       <div class="main">
          <h1> Edit quizes </h1>
          <hr>
+         <form id="new-question-form">
+           <label for="question">Question:</label><br>
+           <input type="text" id="question" name="question"><br>
+
+           <label for="answer">Answer:</label><br>
+           <input type="text" id="answer" name="answer"><br>
+
+           <label for="topic">Topic:</label><br>
+           <input type="text" id="topic" name="topic">
+
+           <hr>
+           <button type="button" name="Submit" onclick="SubmitNewQuestion()">Submit new</button>
+         </form>
+
+
+         <hr>
          <button type="button" name="Get questions" onclick="ClickButton()">Get questions</button>
          <hr>
          <ul id="questionlist">
          </ul>
       </div>
       <script src="/static/js/quiz.js"></script>
+
    </body>
 </html>
