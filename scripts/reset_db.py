@@ -1,5 +1,7 @@
 import sqlite3
 import os
+import sys
+
 
 def create_connection(db_file):
 
@@ -10,18 +12,18 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-    except Error as e:
-        print(e)
-
+    except:
+        error = sys.exc_info()[0]
+        print(error)
 
     return conn
+
 
 def reset_db():
     sqliteConnection = False
 
     try:
-        my_db = input('db_name: ')
-
+        my_db = input('db_name: ')  # nosec
 
         sqliteConnection = create_connection('%s.db' % my_db)
 

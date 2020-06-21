@@ -1,10 +1,17 @@
 import json
 import sqlite3
 import os
+import sys
+import yaml
 from flask import g, Response
 
-# TODO: read this from settings
-DATABASE = 'db/abroquiz_1.db'
+
+def load_settings():
+    with open("settings.yml") as file:
+        return yaml.safe_load(file)
+
+
+DATABASE = load_settings()['db_file']
 
 
 def create_connection(db_file):
@@ -17,8 +24,8 @@ def create_connection(db_file):
     try:
         conn = sqlite3.connect(db_file)
         conn.row_factory = dict_factory
-    except Error as e:
-        print(e)
+    except:
+        print(sys.exc_info()[0])
     return conn
 
 
@@ -29,7 +36,7 @@ def get_db():
     return db
 
 
-def close_connection(exception):
+def close_connection():
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
@@ -40,7 +47,7 @@ def query_db(query, args=(), one=False):
     records = cur.fetchall()
     cur.close()
 
-    return (rv[0] if records else True) if one else records
+    return (records[0] if records else True) if one else records
 
 
 def write_db(query, args=()):
@@ -49,8 +56,8 @@ def write_db(query, args=()):
         cur.close()
         submit_db()
         return "true"
-    except Error as e:
-        print(e)
+    except:
+        print(sys.exc_info()[0])
         return "false"
 
 
@@ -59,7 +66,7 @@ def submit_db():
 
 
 def teardown(exception):
-    close_connection(exception)
+    close_connection()
 
 
 def dict_factory(cursor, row):
