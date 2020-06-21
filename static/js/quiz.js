@@ -41,7 +41,6 @@ function AddQuestionToList(item) {
 }
 
 function ClickButton() {
-   questionList.textContent = "loading";
    GetQuestions(0, "Marin");
 }
 
