@@ -5,3 +5,18 @@
    margin-top:40px;
    margin-right:auto;
 }
+
+.wider-table {
+  
+}
+
+td {
+   padding: 10px;
+   
+}
+
+th {
+   min-width: 100px;
+   padding: 10px;
+   border-bottom: 1px solid #f0f0f0;
+}

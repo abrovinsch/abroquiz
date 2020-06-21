@@ -1,36 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-   <head>
-      <meta charset="utf-8">
-      <title>Edit quizes – Abroquiz</title>
-      <link rel="stylesheet" href="/static/css/style.css">
-   </head>
-   <body>
-      <div class="main">
-         <h1> Edit quizes </h1>
-         <hr>
-         <form id="new-question-form">
-           <label for="question">Question:</label><br>
-           <input type="text" id="question" name="question"><br>
 
-           <label for="answer">Answer:</label><br>
-           <input type="text" id="answer" name="answer"><br>
+<head>
+   <meta charset="utf-8">
+   <title>Edit quizes – Abroquiz</title>
+   <link rel="stylesheet" href="/static/css/style.css">
+</head>
 
-           <label for="topic">Topic:</label><br>
-           <input type="text" id="topic" name="topic">
+<body>
+   <div class="main">
+      <h1> Edit quizes </h1>
+      <hr>
+      <form id="new-question-form">
+         <label for="question">Question:</label><br>
+         <input type="text" id="question" name="question"><br>
 
-           <hr>
-           <button type="button" name="Submit" onclick="SubmitNewQuestion()">Submit new</button>
-         </form>
+         <label for="answer">Answer:</label><br>
+         <input type="text" id="answer" name="answer"><br>
 
+         <label for="topic">Topic:</label><br>
+         <input type="text" id="topic" name="topic">
 
          <hr>
-         <button type="button" name="Get questions" onclick="ClickButton()">Get questions</button>
-         <hr>
-         <ul id="questionlist">
-         </ul>
-      </div>
-      <script src="/static/js/quiz.js"></script>
+         <button type="button" name="Submit" onclick="SubmitNewQuestion()">Submit new</button>
+      </form>
 
-   </body>
+
+      <hr>
+      <button type="button" name="Get questions" onclick="ClickButton()">Get questions</button>
+      <hr>
+
+      <table class="wider-table">
+
+         <tbody id="table-body">
+            <tr>
+               <th>ID</th>
+               <th>Question</th>
+               <th>Answer</th>
+               <th>Topic</th>
+            </tr>
+         </tbody>
+      </table>
+
+      <ul id="questionlist">
+      </ul>
+   </div>
+   <script src="/static/js/quiz.js"></script>
+
+</body>
+
 </html>
