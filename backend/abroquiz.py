@@ -1,10 +1,11 @@
 import json
 import sqlite3
 import os
-from flask import g
+from flask import g, Response
 
 # TODO: read this from settings
 DATABASE = 'db/abroquiz_1.db'
+
 
 def create_connection(db_file):
     print(os.getcwd())
@@ -20,16 +21,19 @@ def create_connection(db_file):
         print(e)
     return conn
 
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = create_connection(DATABASE)
     return db
 
+
 def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
+
 
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
@@ -37,6 +41,7 @@ def query_db(query, args=(), one=False):
     cur.close()
 
     return (rv[0] if records else True) if one else records
+
 
 def write_db(query, args=()):
     try:
@@ -52,8 +57,10 @@ def write_db(query, args=()):
 def submit_db():
     get_db().commit()
 
+
 def teardown(exception):
     close_connection(exception)
+
 
 def dict_factory(cursor, row):
     d = {}
@@ -61,14 +68,24 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-### END_POINTS
+
+def json_response(obj):
+    return Response(
+        response=json.dumps(obj),
+        status=201,
+        mimetype='application/json'
+    )
+
+
+# END_POINTS
 
 def get_questions(quiz_id, topic):
-    return json.dumps(query_db("""
+    return json_response(query_db("""
         SELECT * FROM question WHERE
         quiz_id = "{}" AND
         topic = "{}"
-    """).format(quiz_id, topic))
+    """.format(quiz_id, topic)))
+
 
 def submit_question(question, answer, topic):
     return write_db("""
@@ -80,4 +97,4 @@ def submit_question(question, answer, topic):
         	"{q}",
         	"{a}",
         	"{t}");
-    """.format(q=question, a=answer,t=topic))
+    """.format(q=question, a=answer, t=topic))
