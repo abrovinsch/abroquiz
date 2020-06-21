@@ -72,7 +72,7 @@ def dict_factory(cursor, row):
 def json_response(obj):
     return Response(
         response=json.dumps(obj),
-        status=201,
+        status=200,
         mimetype='application/json'
     )
 
