@@ -4,8 +4,9 @@ async function GetQuestions(id, topic) {
    RemoveOldQuestions();
 
    const response = await fetch(`/questions/${id}/${topic}`);
+   const result = await response.json();
 
-   for (let item of response.json()) {
+   for (let item of result) {
       AddQuestionToList(item);
    }
 
