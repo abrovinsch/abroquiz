@@ -17,3 +17,19 @@ th {
    padding: 10px;
    border-bottom: 1px solid #f0f0f0;
 }
+
+.answerbtn {
+   border: 1px solid gray;
+   border-radius: 4px;
+   margin: 2px;
+   padding: 10px;
+   text-align: center;
+}
+
+.answerbtn:hover {
+   background-color: rgba(1, 1, 1, 0.05)
+}
+
+.answerbtn:active {
+   background-color: rgba(1, 1, 1, 0.2)
+}

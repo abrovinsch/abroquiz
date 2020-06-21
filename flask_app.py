@@ -16,9 +16,16 @@ def landingpage():
     with app.app_context():
         return render_template("home.html")
 
+# A quiz where users can try things out
+
+
+@app.route('/quiz')
+def quiz():
+    with app.app_context():
+        return render_template("quiztest.html")
+
+
 # Edit interface
-
-
 @app.route('/abroquiz/edit')
 def edit():
     with app.app_context():

@@ -3,3 +3,4 @@ backend/__pycache__
 settings.yml
 .vscode/
 __pycache__
+db/*
