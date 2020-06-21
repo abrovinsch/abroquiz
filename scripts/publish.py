@@ -1,5 +1,7 @@
 import os
 from git import Repo
+import yaml
+import webbrowser
 
 
 def push(repo, remote_name):
@@ -13,7 +15,15 @@ def push(repo, remote_name):
     origin.push()
 
 
+def load_settings():
+    with open("settings.yml") as file:
+        return yaml.safe_load(file)
+
+
 def publish():
+
+    # Load settings
+    settings = load_settings()
 
     # Check for un-commited changes
     repo = Repo(os.getcwd())
@@ -28,9 +38,12 @@ def publish():
         exit()
 
     # Git Push
-    push(repo, "origin")
+    push(repo, settings['remote_name'])
 
-    # Tell host to rebuild
+    # Open dashboard
+    webbrowser.open(settings['dashboard_url'])
+
+    print("--- Done 🐚")
 
 
 if __name__ == "__main__":

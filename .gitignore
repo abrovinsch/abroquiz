@@ -1,5 +1,5 @@
 __pycache__/*
 backend/__pycache__
-db_settings.yml
+settings.yml
 .vscode/
 __pycache__
