@@ -1,7 +1,7 @@
 const tableBody = document.getElementById("table-body")
 
-async function GetQuestions(id, topic) {
-   const response = await fetch(`/questions/${id}/${topic}`);
+async function GetQuestions(id) {
+   const response = await fetch(`/questions/${id}`);
    const result = await response.json();
    return result;
 }
@@ -32,15 +32,15 @@ function AddQuestionToList(item) {
    rowNode.className = "question-row";
 
    rowNode.appendChild(NewCell(`${item.question_id}`));
-   rowNode.appendChild(NewCell(`${item.question}`));
-   rowNode.appendChild(NewCell(`${item.ans1}`));
-   rowNode.appendChild(NewCell(`${item.topic}`));
+   rowNode.appendChild(NewCell(`${item.question_text}`));
+   rowNode.appendChild(NewCell(`${item.answer_text}`));
+   rowNode.appendChild(NewCell(`${item.question_type}`));
 
    tableBody.appendChild(rowNode);
 }
 
 async function ClickButton() {
-   const questions = await GetQuestions(0, "Marin");
+   const questions = await GetQuestions(0);
    UpdateQuestionTable(questions);
 }
 
@@ -49,7 +49,8 @@ async function SubmitNewQuestion() {
    let form = {
       question: document.getElementById('question').value,
       answer: document.getElementById('answer').value,
-      topic: document.getElementById('topic').value
+      quiz_id: parseInt(document.getElementById('topic').value),
+      question_type: "learn_word_meaning"
    };
 
    const result = await fetch('/abroquiz/submit', {
@@ -62,12 +63,12 @@ async function SubmitNewQuestion() {
    console.log(result);
 }
 
-async function NewQuiz(topic) {
+async function NewQuiz() {
    window.questionResults = [];
    window.correctAnswers = 0;
    window.numberOfQuestions = 10;
    window.numberOfoptions = 4;
-   window.questions = await GetQuestions(0, topic);
+   window.questions = await GetQuestions(0);
 
    UpdateScoreKeeper();
 
@@ -78,7 +79,7 @@ async function NewQuiz(topic) {
 
    window.allAnswers = [];
    for (let q of window.questions) {
-      if (q.ans1 != null) window.allAnswers.push(q.ans1);
+      if (q.answer_text != null) window.allAnswers.push(q.answer_text);
    }
    NextQuestion();
 }
@@ -117,7 +118,7 @@ function NextQuestion() {
    window.questions.splice(nextQuestionIndex, 1);
 
    let options = [];
-   options.push(window.currentQuestion.ans1);
+   options.push(window.currentQuestion.answer_text);
    while (options.length < window.numberOfoptions) {
       let answer = window.allAnswers[RandomBetween(0, window.allAnswers.length)];
       if (!options.includes(answer)) {
@@ -129,7 +130,7 @@ function NextQuestion() {
 
 function UpdateUIForQuestion(options) {
    RemoveAllElementsWithClass('answerbtn');
-   document.getElementById("question").textContent = window.currentQuestion.question;
+   document.getElementById("question").textContent = window.currentQuestion.question_text;
    let quizMain = document.getElementById("quiz-main");
 
    for (let opt of Shuffle(options)) {
@@ -145,7 +146,7 @@ function UpdateUIForQuestion(options) {
 }
 
 function OnAnswerQuestion(option) {
-   let correct = option == window.currentQuestion.ans1;
+   let correct = option == window.currentQuestion.answer_text;
    if (correct) {
       window.correctAnswers++;
       alert("Correct");
@@ -164,7 +165,7 @@ function OnAnswerQuestion(option) {
 
 function FinishGame() {
    alert(`Game finished\nScore: ${window.correctAnswers} / ${window.questionResults.length}`);
-   NewQuiz("Marin");
+   NewQuiz();
 }
 
 function UpdateScoreKeeper() {

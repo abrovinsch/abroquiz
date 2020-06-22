@@ -34,9 +34,9 @@ def edit():
 ### API ###
 
 
-@app.route('/questions/<quiz_id>/<topic>')
-def get_questions(quiz_id, topic):
-    return abroquiz.get_questions(escape(quiz_id), escape(topic))
+@app.route('/questions/<quiz_id>')
+def get_questions(quiz_id):
+    return abroquiz.get_questions(escape(quiz_id))
 
 
 @app.route('/abroquiz/submit', methods=['POST'])
@@ -45,5 +45,6 @@ def add_question():
     abroquiz.submit_question(
         escape(content["question"]),
         escape(content["answer"]),
-        escape(content["topic"]))
-    return get_questions(0, content["topic"])
+        escape(content["quiz_id"]),
+        escape(content["question_type"]))
+    return get_questions(int(content["quiz_id"]))

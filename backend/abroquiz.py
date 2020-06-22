@@ -86,22 +86,24 @@ def json_response(obj):
 
 # END_POINTS
 
-def get_questions(quiz_id, topic):
+def get_questions(quiz_id):
     return json_response(query_db("""
-        SELECT * FROM question WHERE
-        quiz_id = "{}" AND
-        topic = "{}"
-    """.format(quiz_id, topic)))
+        SELECT * FROM questions WHERE
+        quiz_id = "{}"
+    """.format(quiz_id)))
 
 
-def submit_question(question, answer, topic):
+def submit_question(question, answer, quiz_id, question_type):
     return write_db("""
-        INSERT INTO question (
-            "question",
-        	"ans1",
-        	"topic")
+        INSERT INTO questions (
+            "question_text",
+        	"answer_text",
+        	"quiz_id",
+            "question_type"
+            )
         VALUES (
         	"{q}",
         	"{a}",
+        	"{i}",
         	"{t}");
-    """.format(q=question, a=answer, t=topic))
+    """.format(q=question, a=answer, i=quiz_id, t=question_type))
