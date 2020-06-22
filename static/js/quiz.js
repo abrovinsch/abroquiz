@@ -63,9 +63,9 @@ async function SubmitNewQuestion() {
 }
 
 async function NewQuiz(topic) {
-   window.usedQuestions = [];
+   window.questionResults = [];
    window.correctAnswers = 0;
-   window.numberOfQuestions = 3;
+   window.numberOfQuestions = 10;
    window.numberOfoptions = 4;
    window.questions = await GetQuestions(0, topic);
 
@@ -107,31 +107,29 @@ function Shuffle(array) {
 }
 
 function NextQuestion() {
-   if (window.usedQuestions.length == window.numberOfQuestions) {
+   if (window.questionResults.length == window.numberOfQuestions) {
       FinishGame();
       return;
    }
 
    let nextQuestionIndex = RandomBetween(0, window.questions.length);
-   let nextQuestion = window.questions[nextQuestionIndex];
-   window.questions.splice(nextQuestionIndex);
-   window.usedQuestions.push(nextQuestion);
-   window.rightAnswer = nextQuestion.ans1;
+   window.currentQuestion = window.questions[nextQuestionIndex];
+   window.questions.splice(nextQuestionIndex, 1);
 
    let options = [];
-   options.push(nextQuestion.ans1);
+   options.push(window.currentQuestion.ans1);
    while (options.length < window.numberOfoptions) {
       let answer = window.allAnswers[RandomBetween(0, window.allAnswers.length)];
       if (!options.includes(answer)) {
          options.push(answer);
       }
    }
-   UpdateUIForNewQuestion(nextQuestion, options);
+   UpdateUIForQuestion(options);
 }
 
-function UpdateUIForNewQuestion(question, options) {
+function UpdateUIForQuestion(options) {
    RemoveAllElementsWithClass('answerbtn');
-   document.getElementById("question").textContent = question.question;
+   document.getElementById("question").textContent = window.currentQuestion.question;
    let quizMain = document.getElementById("quiz-main");
 
    for (let opt of Shuffle(options)) {
@@ -139,30 +137,38 @@ function UpdateUIForNewQuestion(question, options) {
       button.name = opt;
       button.className = 'answerbtn';
       button.onclick = function () {
-         AnswerQuestion(button.name);
+         OnAnswerQuestion(button.name);
       }
       button.innerHTML = `<h4 class="option-text">${opt}</h4>`;
       quizMain.appendChild(button);
    }
 }
 
-function AnswerQuestion(option) {
-   if (option == window.rightAnswer) {
+function OnAnswerQuestion(option) {
+   let correct = option == window.currentQuestion.ans1;
+   if (correct) {
       window.correctAnswers++;
       alert("Correct");
    } else {
       alert("Wrong");
    }
+   // Perhaps should add time taken to answer too?
+   window.questionResults.push({
+      questionID: window.currentQuestion.question_id,
+      answerGiven: option,
+      correct: correct
+   })
    UpdateScoreKeeper();
    NextQuestion();
 }
 
 function FinishGame() {
-   alert("Game finished!");
+   alert(`Game finished\nScore: ${window.correctAnswers} / ${window.questionResults.length}`);
    NewQuiz("Marin");
 }
 
 function UpdateScoreKeeper() {
-   document.getElementById("points").textContent = window.correctAnswers.toString();
-   document.getElementById("questionsAnswered").textContent = window.usedQuestions.length.toString();
-}
+   document.getElementById("questionsAnswered").textContent = window.questionResults.length;
+   document.getElementById("questionsInQuiz").textContent = window.numberOfQuestions;
+   document.getElementById("score").textContent = window.correctAnswers.toString();
+} 
