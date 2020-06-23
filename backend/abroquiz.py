@@ -47,7 +47,7 @@ def query_db(query, args=(), one=False):
     records = cur.fetchall()
     cur.close()
 
-    return (records[0] if records else True) if one else records
+    return (records[0] if records else False) if one else records
 
 
 def write_db(query, args=()):
@@ -107,3 +107,28 @@ def submit_question(question, answer, quiz_id, question_type):
         	"{i}",
         	"{t}");
     """.format(q=question, a=answer, i=quiz_id, t=question_type))
+
+
+def full_course_tree(id):
+
+    course_data = query_db("""
+        SELECT * FROM courses
+        WHERE course_id = {}
+    """.format(id), one=True)
+
+    if course_data == False:
+        # TODO: Raise 404
+        return "404"
+
+    course_data["sections"] = query_db("""
+        SELECT * FROM sections
+        WHERE course_id = {}
+    """.format(id))
+
+    for s in course_data["sections"]:
+        s["quizes"] = query_db("""
+            SELECT * FROM quizes
+            WHERE section_id = {}
+        """.format(s["section_id"]))
+
+    return json_response(course_data)

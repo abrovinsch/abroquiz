@@ -48,3 +48,8 @@ def add_question():
         escape(content["quiz_id"]),
         escape(content["question_type"]))
     return get_questions(int(content["quiz_id"]))
+
+
+@app.route('/course/<id>')
+def get_course_full(id):
+    return abroquiz.full_course_tree(escape(id))
